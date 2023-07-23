@@ -1,5 +1,6 @@
 # Backend StarLight
-[Stage StarLight](https://github.com/KateySt/StarLight-beckend/blob/23.1/TalentStages.drawio.pdf)
+
+![Stage StarLight](https://github.com/KateySt/cofig/blob/main/TalentStages.drawio.jpg)
 
 ## About
 
