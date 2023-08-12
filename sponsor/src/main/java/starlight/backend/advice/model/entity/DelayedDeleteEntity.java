@@ -31,5 +31,4 @@ public class DelayedDeleteEntity {
     private Instant deleteDate;
     @Enumerated(EnumType.STRING)
     private DeletingEntityType deletingEntityType;
-
 }

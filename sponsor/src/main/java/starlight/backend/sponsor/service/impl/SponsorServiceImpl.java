@@ -2,10 +2,13 @@ package starlight.backend.sponsor.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import starlight.backend.advice.config.AdviceConfiguration;
 import starlight.backend.advice.model.entity.DelayedDeleteEntity;
@@ -21,12 +24,14 @@ import starlight.backend.sponsor.SponsorRepository;
 import starlight.backend.sponsor.model.entity.SponsorEntity;
 import starlight.backend.sponsor.model.enums.SponsorStatus;
 import starlight.backend.sponsor.model.request.SponsorUpdateRequest;
+import starlight.backend.sponsor.model.response.KudosWithProofId;
 import starlight.backend.sponsor.model.response.SponsorFullInfo;
 import starlight.backend.sponsor.model.response.SponsorKudosInfo;
 import starlight.backend.sponsor.service.SponsorServiceInterface;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -41,27 +46,30 @@ public class SponsorServiceImpl implements SponsorServiceInterface {
     private SponsorMapper sponsorMapper;
     private EmailService emailService;
     private AdviceService adviceService;
+    private RestTemplate restTemplate;
 
 
     @Override
-    public SponsorKudosInfo getUnusableKudos(long sponsorId) {
-        int alreadyMarkedKudos;
+    public SponsorKudosInfo getUnusableKudos(long sponsorId) {//TODo проверить работает лт
         var sponsor = sponsorRepository.findById(sponsorId)
                 .orElseThrow(() -> new SponsorNotFoundException(sponsorId));
-        /*List<KudosWithProofId> kudosList = sponsor.getKudos()
-                .stream()
-                .map(el -> sponsorMapper.toKudosWithProofId(el))
-                .toList();
-        if (kudosList.isEmpty()) {
-            alreadyMarkedKudos = 0;
-        } else {
-            alreadyMarkedKudos = kudosList.stream()
-                    .map(KudosWithProofId::countKudos)
-                    .reduce(Integer::sum)
-                    .get();
-        }*/
-        return null;
-        //return new SponsorKudosInfo(sponsor.getUnusedKudos(), alreadyMarkedKudos, kudosList);
+        ParameterizedTypeReference<List<KudosWithProofId>> responseType = new ParameterizedTypeReference<>() {
+        };
+        ResponseEntity<List<KudosWithProofId>> responseEntity = restTemplate.exchange(
+                "http://TALENT/api/v3/kudos/" + sponsorId,
+                HttpMethod.GET,
+                null,
+                responseType
+        );
+
+        List<KudosWithProofId> kudosList = responseEntity.getBody();
+
+        int alreadyMarkedKudos = kudosList.stream()
+                .map(KudosWithProofId::countKudos)
+                .reduce(Integer::sum)
+                .orElse(0);
+        log.info("alreadyMarkedKudos{}", alreadyMarkedKudos);
+        return new SponsorKudosInfo(sponsor.getUnusedKudos(), alreadyMarkedKudos, kudosList);
     }
 
     @Override
@@ -165,8 +173,14 @@ public class SponsorServiceImpl implements SponsorServiceInterface {
     public ResponseEntity<String> sendEmailForRecoverySponsorAccount(long sponsorId) {
         String email = getSponsorMail(sponsorId);
         emailService.sendRecoveryMessageSponsorAccount(email, adviceService.getUUID(sponsorId));
-        log.info("Email sent to sponsor {}", email);
         return ResponseEntity.ok("Email sent to " + email);
 
+    }
+
+    @Override
+    public void setUnusableKudos(long sponsorId, int kudosRequest) {
+        var sponsor = sponsorRepository.findById(sponsorId).orElseThrow(() -> new SponsorNotFoundException(sponsorId));
+        sponsor.setUnusedKudos(kudosRequest);
+        sponsorRepository.save(sponsor);
     }
 }

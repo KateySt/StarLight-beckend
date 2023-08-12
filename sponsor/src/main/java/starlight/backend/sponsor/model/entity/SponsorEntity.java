@@ -1,18 +1,14 @@
 package starlight.backend.sponsor.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.validation.annotation.Validated;
-import starlight.backend.kudos.model.entity.KudosEntity;
 import starlight.backend.sponsor.model.enums.SponsorStatus;
-import starlight.backend.user.model.entity.UserEntity;
 
 import java.time.Instant;
-import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -43,9 +39,4 @@ public class SponsorEntity {
     private Instant expiryDate;
     @Enumerated(EnumType.STRING)
     private SponsorStatus status;
-    @OneToMany(mappedBy = "owner")
-    @JsonManagedReference
-    private List<KudosEntity> kudos;
-    @OneToOne(mappedBy = "sponsor")
-    private UserEntity user;
 }

@@ -17,4 +17,6 @@ public interface SponsorServiceInterface {
     String getSponsorMail(long sponsorId);
 
     ResponseEntity<String> sendEmailForRecoverySponsorAccount(long sponsorId);
+
+    void setUnusableKudos(long sponsorId, int kudosRequest);
 }

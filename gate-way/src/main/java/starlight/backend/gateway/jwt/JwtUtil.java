@@ -76,6 +76,7 @@ public class JwtUtil {
                     Boolean.class
             );
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Id : " + id + " do not have this role : " + role);
+        return false;
+        //throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Id : " + id + " do not have this role : " + role);
     }
 }

@@ -47,6 +47,7 @@ public class SecurityServiceImpl implements SecurityServiceInterface {
                 "http://TALENT/api/v3/talent?email=" + username,
                 Talent.class
         );
+        assert talent != null;
         var user = userRepository.findByTalentId(talent.talent_id());
         var token = getJWTToken(mapperSecurity.toUserDetailsImplTalent(talent, user),
                 talent.talent_id());
@@ -87,13 +88,13 @@ public class SecurityServiceImpl implements SecurityServiceInterface {
                 user,
                 Talent.class
         );
-        log.info("talent {}", talent);
         if (!roleRepository.existsByName(Role.TALENT.getAuthority())) {
             roleRepository.save(RoleEntity.builder()
                     .name(Role.TALENT.getAuthority())
                     .build());
         }
         var role = roleRepository.findByName(Role.TALENT.getAuthority());
+        assert talent != null;
         var userEntity = userRepository.save(UserEntity.builder()
                 .talentId(talent.talent_id())
                 .role(role)

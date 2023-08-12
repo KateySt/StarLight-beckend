@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import starlight.backend.exception.proof.ProofNotFoundException;
 import starlight.backend.kudos.model.entity.KudosEntity;
+import starlight.backend.kudos.model.request.AddKudosOnProof;
 import starlight.backend.kudos.model.response.KudosOnProof;
 import starlight.backend.kudos.service.KudosServiceInterface;
 
@@ -46,7 +48,6 @@ public class KudosController {
     @GetMapping("/proofs/{proof-id}/kudos")
     public KudosOnProof getKudosOnProof(@PathVariable("proof-id") long proofId) {
         log.info("@GetMapping(\"/proofs/{proof-id}/kudos\")");
-        log.info("Getting proof-id = {}", proofId);
         return kudosService.getKudosOnProof(proofId);
     }
 
@@ -80,9 +81,8 @@ public class KudosController {
     @PostMapping("/proofs/{proof-id}/kudos")
     @ResponseStatus(HttpStatus.CREATED)
     public KudosEntity addKudos(@PathVariable("proof-id") long proofId,
-                                @RequestParam int kudos) {
+                                @RequestBody AddKudosOnProof addKudosOnProof) {
         log.info("@PostMapping(\"/proofs/{proof-id}/kudos\")");
-        log.info("Getting proof-id = {}", proofId);
-        return kudosService.addKudosOnProof(proofId, kudos);
+        return kudosService.addKudosOnProof(proofId, addKudosOnProof);
     }
 }

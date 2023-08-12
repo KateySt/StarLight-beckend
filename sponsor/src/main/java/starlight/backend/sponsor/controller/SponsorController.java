@@ -1,4 +1,4 @@
-package starlight.backend.sponsor;
+package starlight.backend.sponsor.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
