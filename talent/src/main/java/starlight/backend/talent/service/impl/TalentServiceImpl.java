@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import starlight.backend.exception.EmailAlreadyOccupiedException;
 import starlight.backend.exception.PageNotFoundException;
 import starlight.backend.exception.proof.InvalidStatusException;
@@ -117,7 +119,6 @@ public class TalentServiceImpl implements TalentServiceInterface {
                 .collect(Collectors.toSet());
         newPosition.addAll(talentPositions);
         return !newPosition.isEmpty() ? newPosition : talentPositions;
-//            TODO: add delete endpoint for delete positions
     }
 
     @Override
@@ -171,7 +172,6 @@ public class TalentServiceImpl implements TalentServiceInterface {
 
     @Override
     public Talent saveTalent(NewUser user) {
-        //TODO: check if sponsor has this email
         if (talentRepository.existsByEmail(user.email())) {
             throw new EmailAlreadyOccupiedException(user.email());
         }
@@ -192,5 +192,17 @@ public class TalentServiceImpl implements TalentServiceInterface {
     @Override
     public boolean isTalentExistedById(long talentId) {
         return talentRepository.existsByTalentId(talentId);
+    }
+
+    @Override
+    public void deletePosition(long talentId, long positionId) {
+        if (!positionRepository.existsByPositionIdAndUsers_TalentId(positionId, talentId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "don`t found position by talentId and positionId!");
+        }
+        var position = positionRepository.findById(positionId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "don`t found this position"));
+        var talent = talentRepository.findById(talentId)
+                .orElseThrow(() -> new UserNotFoundException(talentId));
+        talent.getPositions().remove(position);
     }
 }

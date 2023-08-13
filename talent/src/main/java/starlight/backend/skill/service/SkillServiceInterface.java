@@ -7,6 +7,7 @@ import starlight.backend.skill.model.request.AddSkill;
 import starlight.backend.skill.model.request.DeleteIdSkills;
 import starlight.backend.skill.model.response.SkillList;
 import starlight.backend.skill.model.response.SkillListWithPagination;
+import starlight.backend.skill.model.response.SkillWithCategory;
 import starlight.backend.talent.model.response.TalentWithSkills;
 
 import java.util.List;
@@ -35,4 +36,6 @@ public interface SkillServiceInterface {
     void deleteSkillArray(long talentId, long proofId, DeleteIdSkills skillId);
 
     void deleteSkills(long talentId, DeleteIdSkills skillId);
+
+    SkillWithCategory getSkillById(long skillId);
 }

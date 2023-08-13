@@ -1,7 +1,9 @@
 package starlight.backend.sponsor.service;
 
 import org.springframework.http.ResponseEntity;
+import starlight.backend.sponsor.model.request.NewUser;
 import starlight.backend.sponsor.model.request.SponsorUpdateRequest;
+import starlight.backend.sponsor.model.response.Sponsor;
 import starlight.backend.sponsor.model.response.SponsorFullInfo;
 import starlight.backend.sponsor.model.response.SponsorKudosInfo;
 
@@ -21,4 +23,8 @@ public interface SponsorServiceInterface {
     void setUnusableKudos(long sponsorId, int kudosRequest);
 
     boolean isSponsorExistedById(long sponsorId);
+
+    Sponsor getSponsorByEmail(String email);
+
+    Sponsor saveSponsor(NewUser newUser);
 }

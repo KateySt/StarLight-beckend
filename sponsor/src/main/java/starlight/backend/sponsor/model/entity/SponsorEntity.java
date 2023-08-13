@@ -7,8 +7,10 @@ import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.validation.annotation.Validated;
 import starlight.backend.sponsor.model.enums.SponsorStatus;
+import starlight.backend.vacancy.model.entity.VacancyEntity;
 
 import java.time.Instant;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -39,4 +41,7 @@ public class SponsorEntity {
     private Instant expiryDate;
     @Enumerated(EnumType.STRING)
     private SponsorStatus status;
+
+    @OneToMany(mappedBy = "sponsor")
+    private Set<VacancyEntity> vacancies;
 }

@@ -6,6 +6,7 @@ import starlight.backend.security.model.response.SessionInfo;
 import starlight.backend.user.model.entity.UserEntity;
 import starlight.backend.user.model.enums.Role;
 import starlight.backend.user.model.enums.SponsorStatus;
+import starlight.backend.user.model.response.Sponsor;
 import starlight.backend.user.model.response.Talent;
 
 import static org.mapstruct.ReportingPolicy.IGNORE;
@@ -26,15 +27,15 @@ public interface MapperSecurity {
                 SponsorStatus.ACTIVE
         );
     }
-/*
-    default UserDetailsImpl toUserDetailsImplSponsor(UserEntity user) {
+
+    default UserDetailsImpl toUserDetailsImplSponsor(Sponsor sponsor, UserEntity user) {
         return new UserDetailsImpl(
-                user.getSponsor().getEmail(),
-                user.getSponsor().getPassword(),
+                sponsor.email(),
+                sponsor.password(),
                 Role.valueOf(user.getRole().getName().substring("ROLE_".length())),
-                user.getSponsor().getStatus()
+                SponsorStatus.ACTIVE
         );
-    }*/
+    }
 
     default UserDetailsImpl toUserDetailsImplAdmin(UserEntity user) {
         return new UserDetailsImpl(

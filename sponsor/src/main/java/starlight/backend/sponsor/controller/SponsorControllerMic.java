@@ -3,13 +3,15 @@ package starlight.backend.sponsor.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import starlight.backend.sponsor.model.request.NewUser;
+import starlight.backend.sponsor.model.response.Sponsor;
 import starlight.backend.sponsor.service.SponsorServiceInterface;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v3")
 @Slf4j
-public class SponsorControllerV3 {
+public class SponsorControllerMic {
     private SponsorServiceInterface sponsorService;
 
     @PostMapping("/sponsors/{sponsor-id}")
@@ -22,5 +24,16 @@ public class SponsorControllerV3 {
     public boolean isSponsorExistedById(@PathVariable("sponsor-id") long sponsorId) {
         log.info("@GetMapping(\"/sponsor\")");
         return sponsorService.isSponsorExistedById(sponsorId);
+    }
+    @GetMapping("/sponsor")
+    public Sponsor getSponsorByEmail(@RequestParam String email) {
+        log.info("@GetMapping(\"/sponsor\")");
+        return sponsorService.getSponsorByEmail(email);
+    }
+
+    @PostMapping("/sponsor")
+    public Sponsor saveSponsor(@RequestBody NewUser newUser) {
+        log.info("@PostMapping(\"/sponsor\")");
+        return sponsorService.saveSponsor(newUser);
     }
 }

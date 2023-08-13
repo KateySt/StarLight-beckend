@@ -25,8 +25,10 @@ import starlight.backend.skill.model.request.AddSkill;
 import starlight.backend.skill.model.request.DeleteIdSkills;
 import starlight.backend.skill.model.response.SkillList;
 import starlight.backend.skill.model.response.SkillListWithPagination;
+import starlight.backend.skill.model.response.SkillWithCategory;
 import starlight.backend.skill.repository.SkillRepository;
 import starlight.backend.skill.service.SkillServiceInterface;
+import starlight.backend.talent.MapperTalent;
 import starlight.backend.talent.model.response.TalentWithSkills;
 import starlight.backend.talent.repository.TalentRepository;
 import starlight.backend.talent.service.TalentServiceInterface;
@@ -41,6 +43,7 @@ import java.util.stream.Collectors;
 @Transactional
 @Slf4j
 public class SkillServiceImpl implements SkillServiceInterface {
+    private final MapperTalent mapperTalent;
     private ProofMapper proofMapper;
     private final String filterParam = "skill";
     private SkillRepository skillRepository;
@@ -155,6 +158,13 @@ public class SkillServiceImpl implements SkillServiceInterface {
                     .orElseThrow(() -> new UserNotFoundException(talentId));
             user.getTalentSkills().remove(skill);
         }
+    }
+
+    @Override
+    public SkillWithCategory getSkillById(long skillId) {
+        return skillRepository.findById(skillId)
+                .map(mapperTalent::toSkillWithCategory)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "don`t found this skill"));
     }
 
     @Override

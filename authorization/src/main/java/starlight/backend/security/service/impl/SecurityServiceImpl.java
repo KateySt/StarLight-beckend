@@ -20,6 +20,7 @@ import starlight.backend.security.service.SecurityServiceInterface;
 import starlight.backend.user.model.entity.RoleEntity;
 import starlight.backend.user.model.entity.UserEntity;
 import starlight.backend.user.model.enums.Role;
+import starlight.backend.user.model.response.Sponsor;
 import starlight.backend.user.model.response.Talent;
 import starlight.backend.user.repository.RoleRepository;
 import starlight.backend.user.repository.UserRepository;
@@ -56,12 +57,16 @@ public class SecurityServiceImpl implements SecurityServiceInterface {
 
     @Override
     public SessionInfo loginInfoSponsor(HttpServletRequest request) {
-        //TODO: find by id sponsor
-       /* var user = userRepository.findBySponsor_Email(auth.getName());
-        var token = getJWTToken(mapperSecurity.toUserDetailsImplSponsor(user),
-                user.getSponsor().getSponsorId());
-        return mapperSecurity.toSessionInfo(token);*/
-        return null;
+        String username = getName(request);
+        Sponsor sponsor = restTemplate.getForObject(
+                "http://SPONSOR/api/v3/sponsor?email=" + username,
+                Sponsor.class
+        );
+        assert sponsor != null;
+        var user = userRepository.findBySponsorId(sponsor.sponsor_id());
+        var token = getJWTToken(mapperSecurity.toUserDetailsImplSponsor(sponsor, user),
+                sponsor.sponsor_id());
+        return mapperSecurity.toSessionInfo(token);
     }
 
     @Override
@@ -106,15 +111,30 @@ public class SecurityServiceImpl implements SecurityServiceInterface {
 
     @Override
     public SessionInfo registerSponsor(NewUser newUser) {
-        //TODO: save sponsor
-       /* var role = roleRepository.findByName(Role.SPONSOR.getAuthority());
-        var user = userRepository.save(UserEntity.builder()
+        NewUser user = NewUser.builder()
+                .fullName(newUser.fullName())
+                .email(newUser.email())
+                .password(passwordEncoder.encode(newUser.password()))
+                .build();
+        Sponsor sponsor = restTemplate.postForObject(
+                "http://SPONSOR/api/v3/sponsor",
+                user,
+                Sponsor.class
+        );
+        if (!roleRepository.existsByName(Role.SPONSOR.getAuthority())) {
+            roleRepository.save(RoleEntity.builder()
+                    .name(Role.SPONSOR.getAuthority())
+                    .build());
+        }
+        var role = roleRepository.findByName(Role.SPONSOR.getAuthority());
+        assert sponsor != null;
+        var userEntity = userRepository.save(UserEntity.builder()
+                .sponsorId(sponsor.sponsor_id())
                 .role(role)
                 .build());
-        var token = getJWTToken(mapperSecurity.toUserDetailsImplSponsor(user),
-                user.getSponsor().getSponsorId());
-        return mapperSecurity.toSessionInfo(token);*/
-        return null;
+        var token = getJWTToken(mapperSecurity.toUserDetailsImplSponsor(sponsor, userEntity),
+                sponsor.sponsor_id());
+        return mapperSecurity.toSessionInfo(token);
     }
 
     @Override

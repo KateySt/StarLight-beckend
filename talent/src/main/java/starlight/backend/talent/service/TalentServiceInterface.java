@@ -25,4 +25,6 @@ public interface TalentServiceInterface {
     Talent getTalentByEmail(String email);
 
     boolean isTalentExistedById(long talentId);
+
+    void deletePosition(long talentId, long positionId);
 }

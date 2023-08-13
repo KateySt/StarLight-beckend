@@ -6,6 +6,7 @@ import starlight.backend.user.model.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    UserEntity findBySponsorId(Long sponsorId);
     UserEntity findByTalentId(Long talentId);
 
     boolean existsByAdmin_Email(String email);

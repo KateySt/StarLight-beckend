@@ -7,9 +7,10 @@ import java.util.Optional;
 
 public interface SponsorRepository extends JpaRepository<SponsorEntity, Long> {
     Optional<SponsorEntity> findBySponsorId(Long sponsorId);
+
     boolean existsByEmail(String email);
 
-    Optional<SponsorEntity> findByEmail(String email);
+    SponsorEntity findByEmail(String email);
 
     Optional<SponsorEntity> findByActivationCode(String token);
 

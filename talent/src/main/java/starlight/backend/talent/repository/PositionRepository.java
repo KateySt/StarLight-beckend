@@ -6,6 +6,7 @@ import starlight.backend.talent.model.entity.PositionEntity;
 
 @Repository
 public interface PositionRepository extends JpaRepository<PositionEntity, Long> {
+    boolean existsByPositionIdAndUsers_TalentId(Long positionId, Long talentId);
     boolean existsByPositionIgnoreCase(String position);
 
     PositionEntity findByPosition(String position);

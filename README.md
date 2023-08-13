@@ -25,4 +25,3 @@ The ability for sponsors to give kudos (likes) to talents and their proofs.
 User management, content moderation, and handling requests for account deletion or recovery for the administrator.
 The goal of the "StarLight" project is to create a friendly and inspiring online community that allows talented individuals to showcase their abilities, receive recognition and support from other users, and find potential sponsors interested in developing and supporting talented individuals.
 
-## Documentation

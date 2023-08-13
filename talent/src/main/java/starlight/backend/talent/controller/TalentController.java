@@ -24,7 +24,7 @@ import starlight.backend.talent.service.TalentServiceInterface;
 @RequestMapping("/api/v1")
 @Tag(name = "Talent", description = "Talent API")
 @Slf4j
-public class TalentControllerV1 {
+public class TalentController {
     private TalentServiceInterface talentService;
 
     @Operation(
@@ -133,5 +133,26 @@ public class TalentControllerV1 {
     public void deleteTalent(@PathVariable("talent-id") long talentId) {
         log.info("@DeleteMapping(\"/talents/{talent-id}\")");
         talentService.deleteTalentProfile(talentId);
+    }
+
+    @Operation(
+            summary = "Delete Position",
+            description = "Delete position."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    @DeleteMapping("/talents/{talent-id}/position/{position-id}")
+    public void deletePosition(@PathVariable("talent-id") long talentId,
+                            @PathVariable("position-id") long positionId) {
+        log.info("@DeleteMapping(\"/talents/{talent-id}/position/{position-id}\")");
+        talentService.deletePosition(talentId, positionId);
     }
 }

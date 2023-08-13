@@ -17,14 +17,17 @@ import starlight.backend.advice.repository.DelayDeleteRepository;
 import starlight.backend.advice.service.AdviceService;
 import starlight.backend.email.model.EmailProps;
 import starlight.backend.email.service.EmailService;
+import starlight.backend.exception.EmailAlreadyOccupiedException;
 import starlight.backend.exception.user.sponsor.SponsorAlreadyOnDeleteList;
 import starlight.backend.exception.user.sponsor.SponsorNotFoundException;
 import starlight.backend.sponsor.SponsorMapper;
 import starlight.backend.sponsor.SponsorRepository;
 import starlight.backend.sponsor.model.entity.SponsorEntity;
 import starlight.backend.sponsor.model.enums.SponsorStatus;
+import starlight.backend.sponsor.model.request.NewUser;
 import starlight.backend.sponsor.model.request.SponsorUpdateRequest;
 import starlight.backend.sponsor.model.response.KudosWithProofId;
+import starlight.backend.sponsor.model.response.Sponsor;
 import starlight.backend.sponsor.model.response.SponsorFullInfo;
 import starlight.backend.sponsor.model.response.SponsorKudosInfo;
 import starlight.backend.sponsor.service.SponsorServiceInterface;
@@ -187,5 +190,27 @@ public class SponsorServiceImpl implements SponsorServiceInterface {
     @Override
     public boolean isSponsorExistedById(long sponsorId) {
         return sponsorRepository.existsBySponsorId(sponsorId);
+    }
+
+    @Override
+    public Sponsor getSponsorByEmail(String email) {
+        if (sponsorRepository.existsByEmail(email)) {
+            throw new SponsorNotFoundException(email);
+        }
+        var sponsor = sponsorRepository.findByEmail(email);
+        return sponsorMapper.toSponsor(sponsor);
+    }
+
+    @Override
+    public Sponsor saveSponsor(NewUser user) {
+        if (sponsorRepository.existsByEmail(user.email())) {
+            throw new EmailAlreadyOccupiedException(user.email());
+        }
+        var sponsor = sponsorRepository.save(SponsorEntity.builder()
+                .email(user.email())
+                .password(user.password())
+                .fullName(user.fullName())
+                .build());
+        return sponsorMapper.toSponsor(sponsor);
     }
 }

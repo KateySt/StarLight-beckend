@@ -17,7 +17,7 @@ import java.util.List;
 @Validated
 @Slf4j
 @RestController
-public class KudosControllerV3 {
+public class KudosControllerMic {
     private KudosServiceInterface kudosService;
 
     @GetMapping("/kudos/{sponsor-id}")

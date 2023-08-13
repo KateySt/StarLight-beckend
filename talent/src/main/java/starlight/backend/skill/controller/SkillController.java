@@ -29,7 +29,7 @@ import starlight.backend.skill.service.SkillServiceInterface;
 @RequestMapping("/api/v1")
 @Tag(name = "Skill", description = "Skill API")
 public class SkillController {
-    private SkillServiceInterface serviceService;
+    private SkillServiceInterface skillService;
 
     @Operation(
             summary = "Get list of skill",
@@ -53,7 +53,7 @@ public class SkillController {
                                                   @RequestParam(defaultValue = "200") @Positive int limit,
                                                   @RequestParam(defaultValue = "") String filter) {
         log.info("@GetMapping(\"/skills\")");
-        return serviceService.getListSkillWithFiltration(filter, skip, limit);
+        return skillService.getListSkillWithFiltration(filter, skip, limit);
     }
 
     @Operation(
@@ -81,7 +81,7 @@ public class SkillController {
                                            @PathVariable("proof-id") long proofId,
                                            @RequestBody AddSkill skills) {
         log.info("@PostMapping(\"/talents/{talent-id}/proofs/{proof-id}/skills\")");
-        return serviceService.addSkillInYourProof(talentId, proofId, skills);
+        return skillService.addSkillInYourProof(talentId, proofId, skills);
     }
 
     @Operation(
@@ -104,7 +104,7 @@ public class SkillController {
     @GetMapping("/proofs/{proof-id}/skills")
     public SkillList getSkillsOfProof(@PathVariable("proof-id") long proofId) {
         log.info("@GetMapping(\"/skills\")");
-        return serviceService.getListSkillsOfProof(proofId);
+        return skillService.getListSkillsOfProof(proofId);
     }
 
     @Operation(
@@ -126,7 +126,7 @@ public class SkillController {
                             @PathVariable("proof-id") long proofId,
                             @PathVariable("skill-id") long skillId) {
         log.info("@DeleteMapping(\"/talents/{talent-id}/proofs/{proof-id}/skills/{skill-id}\")");
-        serviceService.deleteSkill(talentId, proofId, skillId);
+        skillService.deleteSkill(talentId, proofId, skillId);
     }
 
     @Operation(
@@ -148,7 +148,7 @@ public class SkillController {
                                  @PathVariable("proof-id") long proofId,
                                  @RequestBody DeleteIdSkills skillId) {
         log.info("@DeleteMapping(\"/talents/{talent-id}/proofs/{proof-id}/skills\")");
-        serviceService.deleteSkillArray(talentId, proofId, skillId);
+        skillService.deleteSkillArray(talentId, proofId, skillId);
     }
 
     @Operation(
@@ -170,6 +170,6 @@ public class SkillController {
     public void deleteSkills(@PathVariable("talent-id") long talentId,
                              @RequestBody DeleteIdSkills skillId) {
         log.info("@DeleteMapping(\"talents/{talent-id}/skills\")");
-        serviceService.deleteSkills(talentId, skillId);
+        skillService.deleteSkills(talentId, skillId);
     }
 }

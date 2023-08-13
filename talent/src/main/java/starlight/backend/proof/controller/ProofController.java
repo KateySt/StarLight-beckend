@@ -28,7 +28,7 @@ import starlight.backend.proof.service.ProofServiceInterface;
 @Validated
 @RequestMapping("/api/v1")
 @Tag(name = "Proof", description = "Proof API")
-public class ProofControllerV1 {
+public class ProofController {
     private ProofServiceInterface proofService;
 
     @Operation(
