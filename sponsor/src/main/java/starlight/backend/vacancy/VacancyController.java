@@ -51,7 +51,7 @@ public class VacancyController {
     )
     @PostMapping("/vacancies")
     @ResponseStatus(HttpStatus.CREATED)
-    public VacancyFullInfo register(@Valid @RequestBody NewVacancy newVacancy) {
+    public VacancyFullInfo creatVacancy(@Valid @RequestBody NewVacancy newVacancy) {
         log.info("@PostMapping(\"/vacancies\")");
         return vacancyService.creatVacancy(newVacancy);
     }

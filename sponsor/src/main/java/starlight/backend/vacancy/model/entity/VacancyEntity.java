@@ -1,12 +1,15 @@
 package starlight.backend.vacancy.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
+import starlight.backend.response.model.entity.ResponseEntity;
 import starlight.backend.sponsor.model.entity.SponsorEntity;
 
 import java.time.Instant;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -33,4 +36,8 @@ public class VacancyEntity {
     @ManyToOne
     @JoinColumn(name = "sponsor_id", nullable = false)
     private SponsorEntity sponsor;
+
+    @OneToMany(mappedBy = "vacancy")
+    @JsonManagedReference
+    private Set<ResponseEntity> responses;
 }
