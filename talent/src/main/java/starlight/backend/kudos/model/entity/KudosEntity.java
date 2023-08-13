@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name  = "kudos")
+@Table(name = "kudos")
 public class KudosEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -24,10 +24,7 @@ public class KudosEntity {
     private Integer countKudos;
     private Instant updateData;
     private Instant createData;
-
-    @Column(name = "sponsor_id")
     private Long sponsorId;
-
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "proof_id", nullable = false)
