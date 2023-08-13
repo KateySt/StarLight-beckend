@@ -64,19 +64,25 @@ public class JwtUtil {
     }
 
     public boolean checkIdWithRole(long id, String role) {
-        if (role.equals(Role.TALENT)) {
-            return restTemplate.getForObject(
+        if (role.equals(Role.TALENT.getAuthority())) {
+            return Boolean.TRUE.equals(restTemplate.getForObject(
                     "http://TALENT/api/v3/talent/" + id,
                     Boolean.class
-            );
+            ));
         }
-        if (role.equals(Role.ADMIN)) {
-            return restTemplate.getForObject(
+        if (role.equals(Role.ADMIN.getAuthority())) {
+            return Boolean.TRUE.equals(restTemplate.getForObject(
                     "http://AUTH/api/v3/admin/" + id,
                     Boolean.class
-            );
+            ));
         }
-        return false;
-        //throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Id : " + id + " do not have this role : " + role);
+        if (role.equals(Role.SPONSOR.getAuthority())) {
+            return Boolean.TRUE.equals(restTemplate.getForObject(
+                    "http://SPONSOR/api/v3/sponsor/" + id,
+                    Boolean.class
+            ));
+        }
+        //return false;
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Id : " + id + " do not have this role : " + role);
     }
 }

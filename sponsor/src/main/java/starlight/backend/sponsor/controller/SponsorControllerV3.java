@@ -18,4 +18,9 @@ public class SponsorControllerV3 {
         log.info("@PostMapping(\"/sponsors/{sponsor-id}\")");
         sponsorService.setUnusableKudos(sponsorId, kudosRequest);
     }
+    @GetMapping("/sponsor/{sponsor-id}")
+    public boolean isSponsorExistedById(@PathVariable("sponsor-id") long sponsorId) {
+        log.info("@GetMapping(\"/sponsor\")");
+        return sponsorService.isSponsorExistedById(sponsorId);
+    }
 }

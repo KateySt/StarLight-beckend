@@ -183,4 +183,9 @@ public class SponsorServiceImpl implements SponsorServiceInterface {
         sponsor.setUnusedKudos(kudosRequest);
         sponsorRepository.save(sponsor);
     }
+
+    @Override
+    public boolean isSponsorExistedById(long sponsorId) {
+        return sponsorRepository.existsBySponsorId(sponsorId);
+    }
 }

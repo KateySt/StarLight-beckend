@@ -31,18 +31,17 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
             log.info("rr====>{}", exchange.getRequest().getPath());
-            log.info("111r====>{}", !validator.isSecured(exchange.getRequest().getPath().toString()));
             if (!validator.isSecured(exchange.getRequest().getPath().toString())) {
-                log.info("12222====>{}", !exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION));
+
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "missing authorization header");
                 }
-                log.info("sxdcfvgbhnjmdcfvghnjmhgfvgh");
+
                 String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
                 }
-                log.info("validateToken{}", jwtUtil.validateToken(authHeader));
+
                 Jws<Claims> claimsJws = jwtUtil.validateToken(authHeader);
                 Claims claims = claimsJws.getBody();
 
@@ -51,20 +50,16 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 String role = jwtUtil.getRole(claims);
 
                 String status = jwtUtil.getStatus(claims);
-                log.info("role{}", jwtUtil.checkIdWithRole(Long.parseLong(id), role));
+
                 jwtUtil.checkIdWithRole(Long.parseLong(id), role);
-                log.info("jwr st{}", jwtUtil.checkTimeToken(claims));
+
                 if (jwtUtil.checkTimeToken(claims)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token expired");
                 }
-                log.info("jwr st{}", !jwtUtil.checkStatus(status));
+
                 if (!jwtUtil.checkStatus(status)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bed status");
                 }
-                log.info("{}", ((!exchange.getRequest().getPath().toString().equals("/api/v1/talents/" + id))
-                        || !role.equals(Role.TALENT.getAuthority()))
-                        && (exchange.getRequest().getMethod() == HttpMethod.PATCH
-                        || exchange.getRequest().getMethod() == HttpMethod.DELETE));
 
                 if (((!exchange.getRequest().getPath().toString().equals("/api/v1/talents/" + id))
                         || !role.equals(Role.TALENT.getAuthority()))

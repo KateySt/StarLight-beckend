@@ -1,4 +1,4 @@
-package starlight.backend.kudos.model;
+package starlight.backend.kudos.model.response;
 
 import lombok.Builder;
 import org.springframework.boot.context.properties.ConfigurationProperties;

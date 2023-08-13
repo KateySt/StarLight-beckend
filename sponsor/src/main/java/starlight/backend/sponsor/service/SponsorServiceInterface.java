@@ -19,4 +19,6 @@ public interface SponsorServiceInterface {
     ResponseEntity<String> sendEmailForRecoverySponsorAccount(long sponsorId);
 
     void setUnusableKudos(long sponsorId, int kudosRequest);
+
+    boolean isSponsorExistedById(long sponsorId);
 }
