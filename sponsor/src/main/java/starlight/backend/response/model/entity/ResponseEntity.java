@@ -21,9 +21,7 @@ public class ResponseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long responseId;
 
-    @ManyToOne
-    @JoinColumn(name = "talent_id")
-    private TalentEntity talent;
+    private Long talentId;
 
     @ManyToOne
     @JoinColumn(name = "vacancy_id")
