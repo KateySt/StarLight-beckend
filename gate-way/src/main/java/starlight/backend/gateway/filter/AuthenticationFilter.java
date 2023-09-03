@@ -51,8 +51,6 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                 String status = jwtUtil.getStatus(claims);
 
-                jwtUtil.checkIdWithRole(Long.parseLong(id), role);
-
                 if (jwtUtil.checkTimeToken(claims)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token expired");
                 }
@@ -60,17 +58,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 if (!jwtUtil.checkStatus(status)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bed status");
                 }
-
                 if (((!exchange.getRequest().getPath().toString().equals("/api/v1/talents/" + id))
-                        || (!role.equals(Role.TALENT.getAuthority()) || !role.equals(Role.ADMIN.getAuthority())))
+                        || (!role.equals(Role.TALENT.getAuthority()) && !role.equals(Role.ADMIN.getAuthority())))
                         && (exchange.getRequest().getMethod() == HttpMethod.PATCH
                         || exchange.getRequest().getMethod() == HttpMethod.DELETE)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "you cannot change profile another talent!!");
-                }
-                if (((!exchange.getRequest().getPath().toString().matches("/api/v1/proofs/[1-9][0-9]*/kudos"))
-                        || (!role.equals(Role.SPONSOR.getAuthority()) || !role.equals(Role.ADMIN.getAuthority())))
-                        && (exchange.getRequest().getMethod() == HttpMethod.POST)) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "you cannot do kodos if you are not a sponsor!!");
                 }
             }
             return chain.filter(exchange);
@@ -78,6 +70,5 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     }
 
     public static class Config {
-
     }
 }

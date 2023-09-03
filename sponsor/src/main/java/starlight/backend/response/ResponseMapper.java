@@ -12,7 +12,6 @@ public interface ResponseMapper {
         return Response.builder()
                 .responseDateCreate(response.getResponseDateCreate())
                 .responseId(response.getResponseId())
-                .talent(response.getTalent())
                 .vacancy(response.getVacancy())
                 .build();
     }

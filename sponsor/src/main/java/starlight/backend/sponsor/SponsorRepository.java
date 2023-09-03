@@ -10,8 +10,7 @@ public interface SponsorRepository extends JpaRepository<SponsorEntity, Long> {
 
     boolean existsByEmail(String email);
 
-    SponsorEntity findByEmail(String email);
-
+    Optional<SponsorEntity> findByEmail(String email);
     Optional<SponsorEntity> findByActivationCode(String token);
 
     boolean existsByActivationCode(String activationCode);

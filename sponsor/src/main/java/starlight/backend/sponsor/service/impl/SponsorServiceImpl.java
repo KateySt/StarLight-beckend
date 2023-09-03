@@ -53,7 +53,7 @@ public class SponsorServiceImpl implements SponsorServiceInterface {
 
 
     @Override
-    public SponsorKudosInfo getUnusableKudos(long sponsorId) {//TODo проверить работает лт
+    public SponsorKudosInfo getUnusableKudos(long sponsorId) {
         var sponsor = sponsorRepository.findById(sponsorId)
                 .orElseThrow(() -> new SponsorNotFoundException(sponsorId));
         ParameterizedTypeReference<List<KudosWithProofId>> responseType = new ParameterizedTypeReference<>() {
@@ -197,8 +197,8 @@ public class SponsorServiceImpl implements SponsorServiceInterface {
         if (sponsorRepository.existsByEmail(email)) {
             throw new SponsorNotFoundException(email);
         }
-        var sponsor = sponsorRepository.findByEmail(email);
-        return sponsorMapper.toSponsor(sponsor);
+        return sponsorRepository.findByEmail(email).map(sponsorMapper::toSponsor)
+                .orElseThrow(() -> new SponsorNotFoundException(email));
     }
 
     @Override
